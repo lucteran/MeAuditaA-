@@ -1,0 +1,1 @@
+<footer class="footer text-center"> 2018 &copy; Gestão da Informação, Auditoria e Avaliação de Sistemas</footer>
