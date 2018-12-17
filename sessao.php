@@ -2,7 +2,7 @@
  
 require_once 'conf.php';
  
-if (!isLoggedIn())
+if (!logado())
 {
     header('Location: index.php');
 }

@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+    
+session_start();
+    
+require_once '../conf.php';
+ 
+require '../sessao.php';
 
+$PDO = db_connect();
+
+?>
 
 <!-- Mirrored from wrappixel.com/ampleadmin/ampleadmin-html/ampleadmin-minimal/basic-table.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 13 Dec 2018 03:31:09 GMT -->
 <head>
@@ -62,7 +72,7 @@
             <div class="container-fluid">
                 <div class="row bg-title">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        <h4 class="page-title">Cadastrar avaliação </h4> </div>
+                        <h4 class="page-title">Cadastrar auditorias </h4> </div>
                     <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
                         <button class="right-side-toggle waves-effect waves-light btn-info btn-circle pull-right m-l-20"><i class="ti-settings text-white"></i></button>
                         <ol class="breadcrumb">
@@ -79,17 +89,33 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="white-box">
-                            <p class="text-muted m-b-30 font-13"> Dados do teste realizado </p>
-                            <form class="form-horizontal">
+                            <p class="text-muted m-b-30 font-13"> Escolha uma empresa para iniciar a auditoria:</p>
+                            <form class="form-horizontal" action="c_criar-auditoria.php" method="post">
                                  <div class="form-group">
                                     <label class="col-sm-12">Empresa</label>
                                     <div class="col-sm-12">
-                                        <select class="form-control" id="tipo">
+                                        <select name="empresa" class="form-control" id="tipo">
                                                 <option selected disabled>Selecione...</option>
+                                            <?php 
+
+    $sql = "SELECT * FROM usuario WHERE usuario.tipo_usuario = 'E' AND 1 <> (SELECT COUNT(idauditoria) from auditoria where auditoria.usuario_idusuario = usuario.idusuario) ORDER BY idusuario ASC";
+        $stmt = $PDO->prepare($sql);
+        $tipo = 'E';
+        $stmt->bindParam(':tipo', $tipo);
+        
+        $stmt->execute();
+
+        while($empresa = $stmt->fetch(PDO::FETCH_OBJ)){
+            $idEmpresa = $empresa->idusuario;
+            $nomeEmpresa = $empresa->nome;
+            echo "<option value=\"$idEmpresa\">$nomeEmpresa</option>";
+        }
+                                            ?>
+                                                
                                         </select>
                                     </div>
                                 </div>
-                                        <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">Enviar</button>
+                                        <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">Auditar</button>
                                         <button type="submit" class="btn btn-inverse waves-effect waves-light">Cancelar</button>
                                 
                                 
@@ -121,8 +147,15 @@
     <script src="plugins/bower_components/peity/jquery.peity.init.js"></script>
     <!--Style Switcher -->
     <script src="plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
+     <?php if(isset($_GET['msg']) || !empty($_GET['msg'])){
+    ?>
+    <script>
+            window.alert("<?php echo $_GET['msg']; ?>");
+    </script>
+    <?php } 
+    ?> 
 </body>
 
 
 <!-- Mirrored from wrappixel.com/ampleadmin/ampleadmin-html/ampleadmin-minimal/basic-table.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 13 Dec 2018 03:31:10 GMT -->
-</html>
+</html> 

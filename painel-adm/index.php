@@ -1,7 +1,15 @@
+<?php
+session_start();
+ 
+require_once '../conf.php';
+ 
+require '../sessao.php';
+
+$PDO = db_connect();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
-
-
 <!-- Mirrored from wrappixel.com/ampleadmin/ampleadmin-html/ampleadmin-minimal/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 13 Dec 2018 03:29:54 GMT -->
 <head>
     <meta charset="utf-8">
@@ -47,18 +55,10 @@
             <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
         </svg>
     </div>
-    <!-- ============================================================== -->
-    <!-- Wrapper -->
-    <!-- ============================================================== -->
     <div id="wrapper">
-        <!-- ============================================================== -->
         <?php include "painel-superior.php"; ?>
         
         <?php include "menu-lateral.php" ?>
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- Page Content -->
-        <!-- ============================================================== -->
         <div id="page-wrapper">
             <div class="container-fluid">
                 <div class="row bg-title">
@@ -69,53 +69,104 @@
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
-                <!-- /.row -->
-                <!-- ============================================================== -->
-                <!-- Different data widgets -->
-                <!-- ============================================================== -->
-                <!-- .row -->
                 <div class="row">
                     <div class="col-lg-3 col-sm-6 col-xs-12">
+                        <div class="white-box analytics-info">
+                            <?php 
+                                                        /* 
+                                    |======STATUS======|
+                                    |Pendente --------1|
+                                    |realizadas ----- 2|
+                                    |solucionadas --- 3|
+                                    |canceladas ----- 0|
+                                    |==================|
+                                                        */
+
+                                $sql = "SELECT id FROM auditoria WHERE status_auditoria = :status AND id_auditor = :idUsuario";
+                                $stmt = $PDO->prepare($sql);
+                                $status = 1;
+                                $stmt->bindParam(':status', $status);
+                                $stmt->bindParam(':idUsuario', $_SESSION['UsuarioId']);
+
+                                $stmt->execute();
+
+                                $statusAuditoria = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            ?>
+                            <h3 class="box-title">Pendentes</h3>
+                            <ul class="list-inline two-part">
+                                <li>
+                                    <i class="fas fa-hourglass-half"></i>
+                                </li>
+                                <li class="text-right"><i class="ti-arrow-up text-purple"></i> <span class="counter text-purple"><?php echo count($statusAuditoria); ?></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-xs-12">
+                        <?php   
+                                $sql = "SELECT id FROM auditoria WHERE status_auditoria = :status AND id_auditor = :idUsuario";
+                                $stmt = $PDO->prepare($sql);
+                                $status = 2;
+                                $stmt->bindParam(':status', $status);
+                                $stmt->bindParam(':idUsuario', $_SESSION['UsuarioId']);
+
+                                $stmt->execute();
+
+                                $statusAuditoria = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        ?>
                         <div class="white-box analytics-info">
                             <h3 class="box-title">Realizadas</h3>
                             <ul class="list-inline two-part">
                                 <li>
                                     <i class="fas fa-check"></i>
                                 </li>
-                                <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="counter text-success">659</span></li>
+                                <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="counter text-success"><?php echo count($statusAuditoria); ?></span></li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-6 col-xs-12">
+                        <?php   
+                                $sql = "SELECT id FROM auditoria WHERE status_auditoria = :status AND id_auditor = :idUsuario";
+                                $stmt = $PDO->prepare($sql);
+
+                                $status = 3;
+                                $stmt->bindParam(':status', $status);
+                                $stmt->bindParam(':idUsuario', $_SESSION['UsuarioId']);
+
+                                $stmt->execute();
+
+                                $statusAuditoria = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        ?>
                         <div class="white-box analytics-info">
-                            <h3 class="box-title">Pendentes</h3>
-                            <ul class="list-inline two-part">
-                                <li>
-                                    <i class="fas fa-hourglass-half"></i>
-                                </li>
-                                <li class="text-right"><i class="ti-arrow-up text-purple"></i> <span class="counter text-purple">869</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 col-xs-12">
-                        <div class="white-box analytics-info">
-                            <h3 class="box-title">Solicitadas</h3>
+                            <h3 class="box-title">Solucionadas</h3>
                             <ul class="list-inline two-part">
                                 <li>
                                     <i class="fas fa-copy"></i>
                                 </li>
-                                <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-info">911</span></li>
+                                <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-info"><?php echo count($statusAuditoria); ?></span></li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-6 col-xs-12">
                         <div class="white-box analytics-info">
+                            <?php 
+                            
+                                $sql = "SELECT id FROM auditoria WHERE status_auditoria = :status AND id_auditor = :idUsuario";
+                                $stmt = $PDO->prepare($sql);
+                                
+                                $status = 0;
+                                $stmt->bindParam(':status', $status);
+                                $stmt->bindParam(':idUsuario', $_SESSION['UsuarioId']);
+
+                                $stmt->execute();
+
+                                $statusAuditoria = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            ?>
                             <h3 class="box-title">Canceladas</h3>
                             <ul class="list-inline two-part">
                                 <li>
                                     <i class="fas fa-ban"></i>
                                 </li>
-                                <li class="text-right"><i class="ti-arrow-down text-danger"></i> <span class="text-danger">18</span></li>
+                                <li class="text-right"><i class="ti-arrow-down text-danger"></i> <span class="text-danger"><?php echo count($statusAuditoria); ?></span></li>
                             </ul>
                         </div>
                     </div>

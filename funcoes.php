@@ -24,7 +24,7 @@ function gerador_hash($str){
 /**
  * Verifica se o usuário está logado
  */
-function isLoggedIn(){
+function logado(){
     
     if (!isset($_SESSION['logado']) || $_SESSION['logado'] !== true){
         return false;

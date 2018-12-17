@@ -55,5 +55,5 @@ $_SESSION['logado'] = true;
 $_SESSION['UsuarioId'] = $usuario['idusuario'];
 $_SESSION['UsuarioNome'] = $usuario['nome'];
  
-header('Location: painel.php');
+header('Location: painel-adm/index.php');
 ?>

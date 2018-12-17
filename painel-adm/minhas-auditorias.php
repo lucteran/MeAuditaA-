@@ -1,5 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+session_start();
+ 
+require_once '../conf.php';
+ 
+require '../sessao.php';
+
+$PDO = db_connect();
+
+?>
+
+<html lang="en">
 
 
 <!-- Mirrored from wrappixel.com/ampleadmin/ampleadmin-html/ampleadmin-minimal/basic-table.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 13 Dec 2018 03:31:09 GMT -->

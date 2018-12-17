@@ -6,8 +6,29 @@
                     <h3><span class="fa-fw open-close"><i class="ti-close ti-menu"></i></span> <span class="hide-menu">Navigation</span></h3> </div>
                 <div class="user-profile">
                     <div class="dropdown user-pro-body">
-                        <div><img src="plugins/images/users/varun.jpg" alt="user-img" class="img-circle"></div>
-                        <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Usuário <span class="caret"></span></a>
+                        <div><img src="plugins/images/users/<?php
+                                                    $thumbnail = $_SESSION['UsuarioId'];
+                                                    if(file_exists($thumbnail . ".png")){
+                                                        $thumbnail = $thumbnail . ".png";
+                                                    } else if(file_exists($thumbnail . ".jpg")) {
+                                                        $thumbnail = $thumbnail . ".jpg";
+                                                    } else if(file_exists($thumbnail . ".jpeg")) {
+                                                        $thumbnail = $thumbnail . ".jpeg";
+                                                    } else if(file_exists($thumbnail . ".gif")) {
+                                                        $thumbnail = $thumbnail . ".gif";
+                                                    } else {
+                                                        $thumbnail = "default.png";
+                                                    }
+                                                    echo "$thumbnail"; ?>" alt="user-img" class="img-circle"></div>
+                        <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php 
+                            if(isset($_SESSION['UsuarioNome'])){
+                                $nome = $_SESSION['UsuarioNome'];
+                                $pos_espaco = strpos($nome, ' ');// conta a quantidade de caracteres antes do espaço
+                                $nome = substr($nome, 0, $pos_espaco);
+                                echo $nome;
+                            }
+                            ?>
+                            <span class="caret"></span></a>
                         <ul class="dropdown-menu animated flipInY">
                             <li><a href="#"><i class="ti-user"></i> Meu Perfil</a></li>
                             <li role="separator" class="divider"></li>
@@ -22,12 +43,12 @@
                     </li>
                     <li> <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-content-copy fa-fw" data-icon="v"></i> <span class="hide-menu"> Auditorias <span class="fa arrow"></span> </span></a>
                         <ul class="nav nav-second-level">
-                            <li> <a href="criar-auditoria.php"><i class="fas fa-eye"></i><span class="hide-menu"> Atribuir auditoria</span></a> </li>
-                            <li> <a href="criar-avaliacao.php"><i class="fas fa-eye"></i><span class="hide-menu"> Cadastrar avaliação</span></a> </li>
-                            <li> <a href="minhas-auditorias.php"><i class="fas fa-plus"></i><span class="hide-menu"> Ver Minhas Auditorias</span></a> </li>
+                            <li> <a href="criar-auditoria.php"><i class="fas fa-plus"></i><span class="hide-menu"> Atribuir auditoria</span></a> </li>
+                            <li> <a href="criar-avaliacao.php"><i class="fas fa-plus"></i><span class="hide-menu"> Cadastrar avaliação</span></a> </li>
+                            <li> <a href="minhas-auditorias.php"><i class="fas fa-eye"></i><span class="hide-menu"> Ver Minhas Auditorias</span></a> </li>
                         </ul>
                     </li>
-                    <li><a href="logoff.php" class="waves-effect"><i class="mdi mdi-logout fa-fw"></i> <span class="hide-menu">Sair</span></a></li>
+                    <li><a href="../logoff.php" class="waves-effect"><i class="mdi mdi-logout fa-fw"></i> <span class="hide-menu">Sair</span></a></li>
                 </ul>
             </div>
         </div>
