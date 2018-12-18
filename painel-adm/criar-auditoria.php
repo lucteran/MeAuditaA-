@@ -116,7 +116,7 @@ $PDO = db_connect();
                                     </div>
                                 </div>
                                         <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">Auditar</button>
-                                        <button type="submit" class="btn btn-inverse waves-effect waves-light">Cancelar</button>
+                                        <button formaction="index.php" onclick="href" class="btn btn-inverse waves-effect waves-light">Cancelar</button>
                                 
                                 
                             </form>

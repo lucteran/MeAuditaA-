@@ -76,15 +76,15 @@ $PDO = db_connect();
                                                         /* 
                                     |======STATUS======|
                                     |Pendente --------1|
-                                    |realizadas ----- 2|
-                                    |solucionadas --- 3|
-                                    |canceladas ----- 0|
+                                    |Realizadas ----- 2|
+                                    |Solucionadas --- 3|
+                                    |Canceladas ----- 4|
                                     |==================|
                                                         */
 
-                                $sql = "SELECT id FROM auditoria WHERE status_auditoria = :status AND id_auditor = :idUsuario";
+                                $sql = "SELECT * FROM auditoria WHERE status_auditoria = :status AND id_auditor = :idUsuario";
                                 $stmt = $PDO->prepare($sql);
-                                $status = 1;
+                                $status = '1';
                                 $stmt->bindParam(':status', $status);
                                 $stmt->bindParam(':idUsuario', $_SESSION['UsuarioId']);
 
@@ -103,9 +103,9 @@ $PDO = db_connect();
                     </div>
                     <div class="col-lg-3 col-sm-6 col-xs-12">
                         <?php   
-                                $sql = "SELECT id FROM auditoria WHERE status_auditoria = :status AND id_auditor = :idUsuario";
+                                $sql = "SELECT * FROM auditoria WHERE status_auditoria = :status AND id_auditor = :idUsuario";
                                 $stmt = $PDO->prepare($sql);
-                                $status = 2;
+                                $status =  '2';
                                 $stmt->bindParam(':status', $status);
                                 $stmt->bindParam(':idUsuario', $_SESSION['UsuarioId']);
 
@@ -125,10 +125,10 @@ $PDO = db_connect();
                     </div>
                     <div class="col-lg-3 col-sm-6 col-xs-12">
                         <?php   
-                                $sql = "SELECT id FROM auditoria WHERE status_auditoria = :status AND id_auditor = :idUsuario";
+                                $sql = "SELECT * FROM auditoria WHERE status_auditoria = :status AND id_auditor = :idUsuario";
                                 $stmt = $PDO->prepare($sql);
 
-                                $status = 3;
+                                $status = '3';
                                 $stmt->bindParam(':status', $status);
                                 $stmt->bindParam(':idUsuario', $_SESSION['UsuarioId']);
 
@@ -150,10 +150,10 @@ $PDO = db_connect();
                         <div class="white-box analytics-info">
                             <?php 
                             
-                                $sql = "SELECT id FROM auditoria WHERE status_auditoria = :status AND id_auditor = :idUsuario";
+                                $sql = "SELECT *     FROM auditoria WHERE status_auditoria = :status AND id_auditor = :idUsuario";
                                 $stmt = $PDO->prepare($sql);
                                 
-                                $status = 0;
+                                $status = '4';
                                 $stmt->bindParam(':status', $status);
                                 $stmt->bindParam(':idUsuario', $_SESSION['UsuarioId']);
 
@@ -186,27 +186,43 @@ $PDO = db_connect();
                                     </div>
                                     <div class="panel-body">
                                         <ul class="chatonline">
+                                             <?php   
+                                                $sql = "SELECT * FROM usuario INNER JOIN auditoria ON auditoria.usuario_idusuario = usuario.idusuario WHERE auditoria.status_auditoria = :status AND auditoria.id_auditor = :idUsuario LIMIT 5";
+                                                $stmt = $PDO->prepare($sql);
+                                                $status =  '2';
+                                                $stmt->bindParam(':status', $status);
+                                                $stmt->bindParam(':idUsuario', $_SESSION['UsuarioId']);
+
+                                                $stmt->execute();
+
+                                            while($empresas = $stmt->fetch(PDO::FETCH_OBJ)){
+                                                    $nomeEmpresa = $empresas->nome;
+                                                    $telEmpresa = $empresas->telefone;
+                                                    $emailEmpresa = $empresas->email;
+                                            ?>    
                                             <li>
                                                 <div class="call-chat">
-                                                    <button class="btn btn-success btn-circle btn-lg" type="button"><i class="fa fa-phone"></i></button>
-                                                    <button class="btn btn-info btn-circle btn-lg" type="button"><i class="fas fa-comments"></i></button>
+                                                    <a class="btn btn-success btn-circle btn-lg" href="tel:<?php echo $telEmpresa; ?>" type="button"><i class="fa fa-phone"></i></a>
+                                                    <a class="btn btn-info btn-circle btn-lg" href="mailto:<?php echo $emailEmpresa; ?>" type="button"><i class="fas fa-comments"></i></a>
                                                 </div>
-                                                <a href="javascript:void(0)"><img src="plugins/images/users/varun.jpg" alt="user-img" class="img-circle"> <span>Varun Dhavan <small class="text-success">online</small></span></a>
+                                                <a href="javascript:void(0)"><img src="plugins/images/users/<?php
+                                                    $thumbnail = $_SESSION['UsuarioId'];
+                                                    if(file_exists($thumbnail . ".png")){
+                                                        $thumbnail = $thumbnail . ".png";
+                                                    } else if(file_exists($thumbnail . ".jpg")) {
+                                                        $thumbnail = $thumbnail . ".jpg";
+                                                    } else if(file_exists($thumbnail . ".jpeg")) {
+                                                        $thumbnail = $thumbnail . ".jpeg";
+                                                    } else if(file_exists($thumbnail . ".gif")) {
+                                                        $thumbnail = $thumbnail . ".gif";
+                                                    } else {
+                                                        $thumbnail = "default.png";
+                                                    }
+                                                    echo "$thumbnail"; ?>" alt="user-img" class="img-circle"> <span><?php echo $nomeEmpresa; ?></span></a>
                                             </li>
-                                            <li>
-                                                <div class="call-chat">
-                                                    <button class="btn btn-success btn-circle btn-lg" type="button"><i class="fa fa-phone"></i></button>
-                                                    <button class="btn btn-info btn-circle btn-lg" type="button"><i class="fas fa-comments"></i></button>
-                                                </div>
-                                                <a href="javascript:void(0)"><img src="plugins/images/users/genu.jpg" alt="user-img" class="img-circle"> <span>Genelia Deshmukh <small class="text-warning">Away</small></span></a>
-                                            </li>
-                                            <li>
-                                                <div class="call-chat">
-                                                    <button class="btn btn-success btn-circle btn-lg" type="button"><i class="fa fa-phone"></i></button>
-                                                    <button class="btn btn-info btn-circle btn-lg" type="button"><i class="fas fa-comments"></i></button>
-                                                </div>
-                                                <a href="javascript:void(0)"><img src="plugins/images/users/ritesh.jpg" alt="user-img" class="img-circle"> <span>Ritesh Deshmukh <small class="text-danger">Busy</small></span></a>
-                                            </li>
+                                            <?php 
+                                            }
+                                            ?>
                                         </ul>
                                     </div>
                                 </div>
@@ -216,7 +232,7 @@ $PDO = db_connect();
                     <!-- /.col -->
                     <div class="col-md-12 col-lg-8 col-sm-12">
                         <div class="panel">
-                            <div class="panel-heading">ÚLTIMAS AUDITORIAS</div>
+                            <div class="panel-heading">ÚLTIMAS AUDITORIAS (MÁX. 5)</div>
                             <div class="table-responsive">
                                 <table class="table table-hover manage-u-table">
                                     <thead>
@@ -230,22 +246,108 @@ $PDO = db_connect();
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td class="text-center">1</td>
-                                            <td><span class="font-medium">Daniel Kristeen</span>
+                                        <?php   
+                                                $sql = "SELECT * FROM auditoria INNER JOIN usuario ON usuario_idusuario = idusuario WHERE auditoria.id_auditor = :idUsuario ORDER BY data_auditoria DESC LIMIT 5";
+                                                $stmt = $PDO->prepare($sql);
+                                                $stmt->bindParam(':idUsuario', $_SESSION['UsuarioId']);
+
+                                                $stmt->execute();
+
+                                            while($empresas = $stmt->fetch(PDO::FETCH_OBJ)){
+                                                    $nomeEmpresa = $empresas->nome;
+                                                    $statusEmpresa = $empresas->status_auditoria;
+                                                    $data = $empresas->data_auditoria;
+                                                    $emailEmpresa = $empresas->email;
+                                                    $solucaoEmpresa = $empresas->solucao;
+                                                    $auditoria = $empresas->idauditoria;
+                                                $sql2 = "SELECT * FROM avaliacao WHERE auditoria_idauditoria = :idauditoria";
+                                                $stmt2 = $PDO->prepare($sql2);
+
+                                                $stmt2->bindParam(':idauditoria', $idauditoria);
+
+                                                $stmt2->execute();
+
+                                                $avaliacao = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+                                            ?>
+                                        <tr data-toggle="modal" data-target="#exampleModal<?php echo $empresas->idauditoria; ?>">
+                                            <td class="text-center"><?php $data = date('d-m-y', strtotime($data)); echo $data; ?></td>
+                                            <td><span class="font-medium"><?php echo $nomeEmpresa; ?></span>
                                             </td>
                                             <td>
-                                                <span class="text-muted">Concluído</span></td>
+                                                <span class="text-muted"><?php 
+                                                if($statusEmpresa==0)
+                                                    echo "Cancelada";
+                                                else if($statusEmpresa==1)
+                                                    echo "Pendente";
+                                                else if($statusEmpresa==2)
+                                                    echo "Realizada";
+                                                else
+                                                    echo "Solucionada";
+                                                                         ?></span></td>
                                             <td>
-                                                <span class="text-muted">Sim</span></td>
+                                                <span class="text-muted"><?php if(count($avaliacao)==0)
+                                                                            echo "Não"; 
+                                                                        else
+                                                                            echo "Sim";
+                                                                         ?>                                                
+                                                </span></td>
                                             <td>
-                                                <span class="text-muted">Resolvido</span>
+                                                <span class="text-muted"><?php if($solucaoEmpresa==0)
+                                                                                    echo "Não Resolvido";
+                                                                                else
+                                                                                    echo "Resolvido";
+                                                                                ?></span>
                                             </td>
                                             <td>
-                                                <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="ti-pencil-alt"></i></button>
-                                                <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="icon-trash"></i></button>
+                                                <button type="button" onclick="editarAuditoria(<?php echo $empresas->idauditoria; ?>)" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="ti-pencil-alt"></i></button>
+                                                <button type="button" onclick="excluirAuditoria(<?php echo $empresas->idauditoria; ?>)" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="icon-trash"></i></button>
                                             </td>
                                         </tr>
+                                        
+                                        <div class="modal fade" id="exampleModal<?php echo $empresas->idauditoria;?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel"><b>Avaliação</b></h5>
+                                                        </div> 
+                                                        <?php 
+                                                $sql3 = "SELECT * FROM `avaliacao` inner join categoria_vulnerabilidade on avaliacao.categoria_vulnerabilidade_idcategoria_vulnerabilidade = categoria_vulnerabilidade.idcategoria_vulnerabilidade where auditoria_idauditoria = (SELECT idauditoria FROM auditoria WHERE idauditoria = :idauditoria) ORDER BY data_avaliacao";
+                                                $stmt3 = $PDO->prepare($sql3);
+                                                $stmt3->bindParam(':idauditoria', $empresas->idauditoria);
+
+                                                $stmt3->execute();
+
+                                                while($avaliacao = $stmt3->fetch(PDO::FETCH_OBJ)){
+                                                    $titulo = $avaliacao->titulo;
+                                                    $data = $avaliacao->data_avaliacao;
+                                                    $categoria = $avaliacao->nome;
+                                                    $site = $avaliacao->site;
+                                                    $url = $avaliacao->url_vulnerabilidade;
+                                                    $nivel = $avaliacao->nivel;   
+                                                    $descricao = $avaliacao->descricao;   
+                                                        ?>
+                                                    <div class="modal-body">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel"><b><?php echo $titulo;?></b></h5>
+                                                        </div> 
+                                                        <?php echo "Data: ".$data."<br><br>";
+                                                        echo "Categoria do erro: ".$categoria."<br><br>";
+                                                        echo "Site: ".$site."<br><br>";
+                                                        echo "URL: ".$url."<br><br>";
+                                                        echo "Nível do erro: ".$nivel."<br><br>";   
+                                                        echo "Descrição do Problema: ".$descricao."<br><br>"; 
+                                                } ?>
+                                                    <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <?php 
+                                            }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -289,6 +391,19 @@ $PDO = db_connect();
     <!-- All Jquery -->
     <!-- ============================================================== -->
     <script src="plugins/bower_components/jquery/dist/jquery.min.js"></script>
+    <script>
+        function excluirAuditoria(idAuditoria){
+            var verifica=confirm("Tem certeza que deseja apagar?");
+            if (verifica==true){
+                var link = "deletarauditoria.php?id="+idAuditoria;
+                window.location.assign(link);
+            }
+        }
+        function editarAuditoria(idAuditoria){
+                var link = "editarauditoria.php?id="+idAuditoria;
+                window.location.assign(link);
+        }
+    </script>
     <!-- Bootstrap Core JavaScript -->
     <script src="bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- Menu Plugin JavaScript -->

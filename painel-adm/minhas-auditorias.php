@@ -105,22 +105,108 @@ $PDO = db_connect();
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td class="text-center">1</td>
-                                            <td><span class="font-medium">Daniel Kristeen</span>
+                                        <?php   
+                                                $sql = "SELECT * FROM auditoria INNER JOIN usuario ON usuario_idusuario = idusuario WHERE auditoria.id_auditor = :idUsuario ORDER BY status_auditoria";
+                                                $stmt = $PDO->prepare($sql);
+                                                $stmt->bindParam(':idUsuario', $_SESSION['UsuarioId']);
+
+                                                $stmt->execute();
+
+                                            while($empresas = $stmt->fetch(PDO::FETCH_OBJ)){
+                                                    $nomeEmpresa = $empresas->nome;
+                                                    $statusEmpresa = $empresas->status_auditoria;
+                                                    $data = $empresas->data_auditoria;
+                                                    $emailEmpresa = $empresas->email;
+                                                    $solucaoEmpresa = $empresas->solucao;
+                                                    $auditoria = $empresas->idauditoria;
+                                                $sql2 = "SELECT * FROM avaliacao WHERE auditoria_idauditoria = :idauditoria";
+                                                $stmt2 = $PDO->prepare($sql2);
+
+                                                $stmt2->bindParam(':idauditoria', $idauditoria);
+
+                                                $stmt2->execute();
+
+                                                $avaliacao = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+                                            ?>
+                                        <tr data-toggle="modal" data-target="#exampleModal<?php echo $empresas->idauditoria; ?>">
+                                            <td class="text-center"><?php $data = date('d-m-y', strtotime($data)); echo $data; ?></td>
+                                            <td><span class="font-medium"><?php echo $nomeEmpresa; ?></span>
                                             </td>
                                             <td>
-                                                <span class="text-muted">Concluído</span></td>
+                                                <span class="text-muted"><?php 
+                                                if($statusEmpresa==0)
+                                                    echo "Cancelada";
+                                                else if($statusEmpresa==1)
+                                                    echo "Pendente";
+                                                else if($statusEmpresa==2)
+                                                    echo "Realizada";
+                                                else
+                                                    echo "Solucionada";
+                                                                         ?></span></td>
                                             <td>
-                                                <span class="text-muted">Sim</span></td>
+                                                <span class="text-muted"><?php if(count($avaliacao)==0)
+                                                                            echo "Não"; 
+                                                                        else
+                                                                            echo "Sim";
+                                                                         ?>                                                
+                                                </span></td>
                                             <td>
-                                                <span class="text-muted">Resolvido</span>
+                                                <span class="text-muted"><?php if($solucaoEmpresa==0)
+                                                                                    echo "Não Resolvido";
+                                                                                else
+                                                                                    echo "Resolvido";
+                                                                                ?></span>
                                             </td>
                                             <td>
-                                                <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="ti-pencil-alt"></i></button>
-                                                <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="icon-trash"></i></button>
+                                                <button type="button" onclick="editarAuditoria(<?php echo $empresas->idauditoria; ?>)" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="ti-pencil-alt"></i></button>
+                                                <button type="button" onclick="excluirAuditoria(<?php echo $empresas->idauditoria; ?>)" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="icon-trash"></i></button>
                                             </td>
                                         </tr>
+                                        
+                                        <div class="modal fade" id="exampleModal<?php echo $empresas->idauditoria;?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel"><b>Avaliação</b></h5>
+                                                        </div> 
+                                                        <?php 
+                                                $sql3 = "SELECT * FROM `avaliacao` inner join categoria_vulnerabilidade on avaliacao.categoria_vulnerabilidade_idcategoria_vulnerabilidade = categoria_vulnerabilidade.idcategoria_vulnerabilidade where auditoria_idauditoria = (SELECT idauditoria FROM auditoria WHERE idauditoria = :idauditoria) ORDER BY data_avaliacao";
+                                                $stmt3 = $PDO->prepare($sql3);
+                                                $stmt3->bindParam(':idauditoria', $empresas->idauditoria);
+
+                                                $stmt3->execute();
+
+                                                while($avaliacao = $stmt3->fetch(PDO::FETCH_OBJ)){
+                                                    $titulo = $avaliacao->titulo;
+                                                    $data = $avaliacao->data_avaliacao;
+                                                    $categoria = $avaliacao->nome;
+                                                    $site = $avaliacao->site;
+                                                    $url = $avaliacao->url_vulnerabilidade;
+                                                    $nivel = $avaliacao->nivel;   
+                                                    $descricao = $avaliacao->descricao;   
+                                                        ?>
+                                                    <div class="modal-body">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel"><b><?php echo $titulo;?></b></h5>
+                                                        </div> 
+                                                        <?php echo "Data: ".$data."<br><br>";
+                                                        echo "Categoria do erro: ".$categoria."<br><br>";
+                                                        echo "Site: ".$site."<br><br>";
+                                                        echo "URL: ".$url."<br><br>";
+                                                        echo "Nível do erro: ".$nivel."<br><br>";   
+                                                        echo "Descrição do Problema: ".$descricao."<br><br>"; 
+                                                } ?>
+                                                    <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <?php 
+                                            }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
