@@ -91,7 +91,7 @@ $PDO = db_connect();
                 <div class="row">
                     <div class="col-md-12">
                         <div class="panel">
-                            <div class="panel-heading">Auditorias - ordenadas por data</div>
+                            <div class="panel-heading">Auditorias - ordenadas por status</div>
                             <div class="table-responsive">
                                 <table class="table table-hover manage-u-table">
                                     <thead>
@@ -118,7 +118,7 @@ $PDO = db_connect();
                                                     $data = $empresas->data_auditoria;
                                                     $emailEmpresa = $empresas->email;
                                                     $solucaoEmpresa = $empresas->solucao;
-                                                    $auditoria = $empresas->idauditoria;
+                                                    $idauditoria = $empresas->idauditoria;
                                                 $sql2 = "SELECT * FROM avaliacao WHERE auditoria_idauditoria = :idauditoria";
                                                 $stmt2 = $PDO->prepare($sql2);
 
@@ -170,6 +170,7 @@ $PDO = db_connect();
                                                     <div class="modal-header">
                                                             <h5 class="modal-title" id="exampleModalLabel"><b>Avaliação</b></h5>
                                                         </div> 
+                                                    <div class="modal-body">
                                                         <?php 
                                                 $sql3 = "SELECT * FROM `avaliacao` inner join categoria_vulnerabilidade on avaliacao.categoria_vulnerabilidade_idcategoria_vulnerabilidade = categoria_vulnerabilidade.idcategoria_vulnerabilidade where auditoria_idauditoria = (SELECT idauditoria FROM auditoria WHERE idauditoria = :idauditoria) ORDER BY data_avaliacao";
                                                 $stmt3 = $PDO->prepare($sql3);
@@ -180,22 +181,31 @@ $PDO = db_connect();
                                                 while($avaliacao = $stmt3->fetch(PDO::FETCH_OBJ)){
                                                     $titulo = $avaliacao->titulo;
                                                     $data = $avaliacao->data_avaliacao;
+                                                    $data = date('d-m-Y H:i:s', strtotime($data));
                                                     $categoria = $avaliacao->nome;
                                                     $site = $avaliacao->site;
                                                     $url = $avaliacao->url_vulnerabilidade;
                                                     $nivel = $avaliacao->nivel;   
                                                     $descricao = $avaliacao->descricao;   
                                                         ?>
-                                                    <div class="modal-body">
+                                                    
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel"><b><?php echo $titulo;?></b></h5>
+                                                            <h5 class="modal-title" id="exampleModalLabel"><b><?php echo $titulo; ?></b></h5>
                                                         </div> 
-                                                        <?php echo "Data: ".$data."<br><br>";
-                                                        echo "Categoria do erro: ".$categoria."<br><br>";
-                                                        echo "Site: ".$site."<br><br>";
-                                                        echo "URL: ".$url."<br><br>";
-                                                        echo "Nível do erro: ".$nivel."<br><br>";   
-                                                        echo "Descrição do Problema: ".$descricao."<br><br>"; 
+                                                        <br>
+                                                        <?php echo "<b>Data:</b> ".$data."<br><br>";
+                                                        echo "<b>Categoria do erro:</b> ".$categoria."<br><br>";
+                                                        echo "<b>Site:</b> ".$site."<br><br>";
+                                                        echo "<b>URL:</b> ".$url."<br><br>";
+                                                        if($nivel=="1")
+                                                            $nivel="Baixa";
+                                                        else if($nivel=="2")
+                                                            $nivel="Média";
+                                                        else if($nivel=="3")
+                                                            $nivel="Alta";
+                                                        echo "<b>Nível do erro:</b> ".$nivel."<br><br>";   
+                                                        echo "<b>Descrição do Problema:</b> ".$descricao."<br><hr/>";
+                                                    
                                                 } ?>
                                                     <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>

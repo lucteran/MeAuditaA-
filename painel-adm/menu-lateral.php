@@ -34,7 +34,7 @@
                             <li role="separator" class="divider"></li>
                             <li><a href="#"><i class="ti-settings"></i> Conf. da Conta</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="login.html"><i class="fa fa-power-off"></i> Sair</a></li>
+                            <li><a href="../logoff.php"><i class="fa fa-power-off"></i> Sair</a></li>
                         </ul>
                     </div>
                 </div>

@@ -91,41 +91,59 @@ $PDO = db_connect();
                     <div class="col-sm-12">
                         <div class="white-box">
                             <p class="text-muted m-b-30 font-13"> Dados do teste realizado </p>
-                            <form class="form-horizontal">
+                            <form class="form-horizontal" action="c_criar-avaliacao.php" method="post">
                                 <div class="form-group">
+                                    
                                     <label class="col-md-12">Empresa  <span class="help"> Auditada </span></label>
                                     <div class="col-md-12">
-                                        <input type="text" class="form-control" id="empresa" disabled placeholder="Nome da empresa"> </div>       
+                                        <select class="form-control" name="empresa" id="empresa">
+                                        <option value="" disabled>SELECIONE...</option>
+                                        <?php   
+                                                $sql = "SELECT idusuario, nome FROM usuario INNER JOIN auditoria ON auditoria.usuario_idusuario = usuario.idusuario WHERE (auditoria.status_auditoria <>3 OR auditoria.status_auditoria<>0) AND auditoria.id_auditor = :idUsuario ORDER BY nome";
+                                                $stmt = $PDO->prepare($sql);
+                                                $stmt->bindParam(':idUsuario', $_SESSION['UsuarioId']);
+                                                $stmt->execute();
+
+                                            while($empresas = $stmt->fetch(PDO::FETCH_OBJ)){
+                                                    $nomeEmpresa = $empresas->nome;
+                                                    $idEmpresa = $empresas->idusuario;
+                                            ?>
+                                        <option value="<?php echo $idEmpresa; ?>"><?php echo $nomeEmpresa; ?></option><?php } ?>
+                                                
+                                        </select> 
+                                    </div>      
                                 </div>
                                  
                                 <div class="form-group">
                                     <label class="col-md-12">Site </label>
                                     <div class="col-md-12">
-                                        <input type="text" class="form-control" id="site" placeholder="Site"> </div>   
+                                        <input type="text" class="form-control" name="site" id="site" placeholder="Site"> </div>   
                                 </div>
                                 
                                 <div class="form-group">
                                     <label class="col-md-12">Titulo da Vulnerabilidade </label>
                                     <div class="col-md-12">
-                                        <input type="text" class="form-control" id="site" placeholder="Título"> </div>   
+                                        <input type="text" class="form-control" name="titulo" id="titulo" placeholder="Título"> </div>   
                                 </div>
                                 
                                 
                                  <div class="form-group">
                                     <label class="col-sm-12">Tipo de Vulnerabilidade</label>
-                                    <div class="col-sm-12">
-                                        <select class="form-control" id="tipo">
-                                                <option selected>Escolher...</option>
-                                                <option>Injeção de Código</option>
-                                                <option>Quebra de autenticação</option>
-                                                <option>Exposição de dados sensíveis</option>
-                                                <option>Entidade externas XML</option>
-                                                <option>Quebra de Controle de acesso</option>
-                                                <option>Configuração incorreta de Segurança</option>
-                                                <option>Cross-site Scripting (XSS)</option>
-                                                <option>Desserialização Insegura</option>
-                                                <option>Componentes com vulnerabilidades conhecidas</option>
-                                                <option>Monitoramento Insuficiente</option>
+                                    <div class="col-sm-12"> 
+                                        <select class="form-control" name="categoria" id="tipo">
+                                                <option value="" selected>Escolher...</option>
+                                            <?php   
+                                                $sql = "SELECT idcategoria_vulnerabilidade, nome FROM categoria_vulnerabilidade";
+                                                $stmt = $PDO->prepare($sql);
+                                                $stmt->execute();
+
+                                            while($vuln = $stmt->fetch(PDO::FETCH_OBJ)){
+                                                    $nomevuln = $vuln->nome;
+                                                    $idvuln = $vuln->idcategoria_vulnerabilidade;
+                                            ?>
+                                                <option value="<?php echo $idvuln; ?>" ><?php echo $vuln->nome; 
+                                            
+                                            ?></option><?php } ?>
                                         </select>
                                     </div>
                                 </div>
@@ -133,35 +151,26 @@ $PDO = db_connect();
                                  <div class="form-group">
                                     <label class="col-md-12">URL com vulnerabilidade </label>
                                     <div class="col-md-12">
-                                        <input type="text" class="form-control" id="url" placeholder="URL"> </div>   
+                                        <input type="text" name="url" class="form-control" id="url" placeholder="URL"> </div>   
                                 </div>
-                                
-                                
                                 
                                 <div class="form-group">
-                                    <label class="col-md-12">Descrição </label>
-                                    <div class="col-md-12">
-                                        <textarea class="form-control" rows="5" id="descricao" placeholder="Descreva aqui detalhes sobre os erros encontrados."></textarea>
-                                    </div>
-                                </div>
-                                
-                                 <div class="form-group">
                                     <label class="col-sm-12">Nível</label>
                                     <div class="col-sm-12">
-                                        <select class="form-control" id="nivel">
+                                        <select class="form-control" name="nivel" id="nivel">
                                                 <option selected>Escolher...</option>
-                                                <option>Baixa</option>
-                                                <option>Média</option>
-                                                <option>Alta</option>
+                                                <option value="1">Baixa</option>
+                                                <option value="2">Média</option>
+                                                <option value="3">Alta</option>
                                         </select>
                                     </div>
                                 </div>
                                 
-                                
                                 <div class="form-group">
-                                    <label class="col-md-12">Data da Auditoria </label>
+                                    <label class="col-md-12">Descrição </label>
                                     <div class="col-md-12">
-                                        <input type="date" class="form-control" id="data" placeholder="Data"> </div>   
+                                        <textarea class="form-control" name="descricao" rows="5" id="descricao" placeholder="Descreva aqui detalhes sobre os erros encontrados."></textarea>
+                                    </div>
                                 </div>
                                 
                                  <div class="form-group">
@@ -171,7 +180,7 @@ $PDO = db_connect();
                                             </div>
                                         </div>
                                         <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">Enviar</button>
-                                        <button type="submit" class="btn btn-inverse waves-effect waves-light">Cancelar</button>
+                                        <button formaction="index.php" class="btn btn-inverse waves-effect waves-light">Cancelar</button>
                                 
                                 
                             </form>
@@ -202,6 +211,9 @@ $PDO = db_connect();
     <script src="plugins/bower_components/peity/jquery.peity.init.js"></script>
     <!--Style Switcher -->
     <script src="plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
+    <script>
+            window.alert("<?php echo $_GET['msg']; ?>");
+    </script>
 </body>
 
 
