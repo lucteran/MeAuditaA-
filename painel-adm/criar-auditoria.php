@@ -20,7 +20,7 @@ $PDO = db_connect();
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" type="image/png" sizes="16x16" href="plugins/images/favicon.png">
-    <title>Ample Admin Template - The Ultimate Multipurpose admin template</title>
+    <title>Audita aí</title>
     <!-- Bootstrap Core CSS -->
     <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Menu CSS -->
@@ -98,12 +98,13 @@ $PDO = db_connect();
                                                 <option selected disabled>Selecione...</option>
                                             <?php 
 
-    $sql = "SELECT * FROM usuario WHERE usuario.tipo_usuario = 'E' AND 1 <> (SELECT COUNT(idauditoria) from auditoria where auditoria.usuario_idusuario = usuario.idusuario) ORDER BY idusuario ASC";
+    $sql = "SELECT * FROM usuario INNER JOIN auditoria ON usuario.idusuario = auditoria.usuario_idusuario WHERE usuario.tipo_usuario = :tipo AND (auditoria.id_auditor=0 or auditoria.id_auditor is null AND auditoria.status_auditoria=1) ORDER BY idusuario";
         $stmt = $PDO->prepare($sql);
         $tipo = 'E';
         $stmt->bindParam(':tipo', $tipo);
         
         $stmt->execute();
+        
 
         while($empresa = $stmt->fetch(PDO::FETCH_OBJ)){
             $idEmpresa = $empresa->idusuario;
