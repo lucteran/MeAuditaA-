@@ -300,7 +300,6 @@ $PDO = db_connect();
                                                                                 ?></span>
                                             </td>
                                             <td>
-                                                <button type="button" onclick="editarAuditoria(<?php echo $empresas->idauditoria; ?>)" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="ti-pencil-alt"></i></button>
                                                 <button type="button" onclick="excluirAuditoria(<?php echo $empresas->idauditoria; ?>)" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="icon-trash"></i></button>
                                             </td>
                                         </tr>
@@ -403,13 +402,9 @@ $PDO = db_connect();
         function excluirAuditoria(idAuditoria){
             var verifica=confirm("Tem certeza que deseja apagar?");
             if (verifica==true){
-                var link = "deletarauditoria.php?id="+idAuditoria;
+                var link = "deletar.php?id="+idAuditoria;
                 window.location.assign(link);
             }
-        }
-        function editarAuditoria(idAuditoria){
-                var link = "editarauditoria.php?id="+idAuditoria;
-                window.location.assign(link);
         }
     </script>
     <!-- Bootstrap Core JavaScript -->

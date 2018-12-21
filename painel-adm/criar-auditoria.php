@@ -98,7 +98,7 @@ $PDO = db_connect();
                                                 <option selected disabled>Selecione...</option>
                                             <?php 
 
-    $sql = "SELECT * FROM usuario INNER JOIN auditoria ON usuario.idusuario = auditoria.usuario_idusuario WHERE usuario.tipo_usuario = :tipo AND (auditoria.id_auditor=0 or auditoria.id_auditor is null AND auditoria.status_auditoria=1) ORDER BY idusuario";
+    $sql = "SELECT * FROM usuario INNER JOIN auditoria ON usuario.idusuario = auditoria.usuario_idusuario WHERE usuario.tipo_usuario = :tipo AND (auditoria.id_auditor=0 or auditoria.id_auditor is null AND auditoria.status_auditoria=1) GROUP BY nome ORDER BY idusuario";
         $stmt = $PDO->prepare($sql);
         $tipo = 'E';
         $stmt->bindParam(':tipo', $tipo);

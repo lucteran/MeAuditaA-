@@ -39,6 +39,19 @@ $PDO = db_connect();
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
+    <script>
+        function excluirAuditoria(idAuditoria){
+            var verifica=confirm("Tem certeza que deseja apagar?");
+            if (verifica==true){
+                var link = "deletar.php?id="+idAuditoria;
+                window.location.assign(link);
+            }
+        }
+        function editarAuditoria(idAuditoria){
+                var link = "editarauditoria.php?id="+idAuditoria;
+                window.location.assign(link);
+        }
+    </script>
 </head>
 
 <body class="fix-header">
@@ -159,7 +172,6 @@ $PDO = db_connect();
                                                                                 ?></span>
                                             </td>
                                             <td>
-                                                <button type="button" onclick="editarAuditoria(<?php echo $empresas->idauditoria; ?>)" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="ti-pencil-alt"></i></button>
                                                 <button type="button" onclick="excluirAuditoria(<?php echo $empresas->idauditoria; ?>)" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="icon-trash"></i></button>
                                             </td>
                                         </tr>
