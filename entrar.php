@@ -53,7 +53,7 @@
 							Não possui conta?
 						</span>
 
-						<a href="#" class="txt2">
+						<a href="cadastro/index.php" class="txt2">
 							Cadastre-se aqui!
 						</a>
 					</div>
@@ -64,6 +64,9 @@
     <!-- Códigos JavaScript-->
 	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>  
 	<script src="js/principal.js"></script>
+	<script>
+            window.alert("<?php echo $_GET['msg']; ?>");
+    </script>
 
 </body>
 </html>
